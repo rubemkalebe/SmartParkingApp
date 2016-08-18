@@ -21,15 +21,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.ufrn.imd.smartparkingapp.model.Spot;
 import br.ufrn.imd.smartparkingapp.service.SpotService;
 
 /**
- * Created by andre on 25/03/2016.
- * Updated by Rubem on 08/18/2016.
+ * @author André, Rubem
+ * @version 18/08/2016
  */
 @EActivity(R.layout.main_activity)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -95,15 +94,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (Spot spot: spots) {
                 BitmapDescriptor icon;
                 if(spot.getReserved() && !spot.getBusy()) {
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
                 } else if(spot.getBusy()) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 } else {
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 }
 
                 LatLng vaga = new LatLng(spot.getLatitude(), spot.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(vaga).title("VAGA " + spot.getSpotID()).icon(icon));
+                googleMap.addMarker(new MarkerOptions().position(vaga).title(spot.toString()).icon(icon));
             }
         } else {
             Log.i("UPDATE::MAP", "ERRO");

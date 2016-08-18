@@ -24,8 +24,8 @@ import br.ufrn.imd.smartparkingapp.model.Spot;
 import br.ufrn.imd.smartparkingapp.utils.JSONProcessor;
 
 /**
- * Created by andre on 13/04/2016.
- * Updated by Rubem on 08/18/2016.
+ * @author André, Rubem
+ * @version 18/08/2016
  */
 public class SpotService extends IntentService {
 
@@ -33,11 +33,13 @@ public class SpotService extends IntentService {
     public static final String SPOTS = "spots";
     public static final String RESULT = "result";
 
-    private static final String SPOT_PATH = "/spot";
+    private static final String SPOT_PATH = "spot/";
     private static final String TAG_APP = "SMARTPARKING";
 
     private int result = Activity.RESULT_CANCELED;
     private List<Spot> spots = null;
+
+    private RequestQueue requestQueue = null;
 
     public SpotService() {
         super(TAG_APP);
@@ -58,7 +60,7 @@ public class SpotService extends IntentService {
     }
 
     private void requestGetSpots() {
-        RequestQueue queue = Volley.newRequestQueue(this);
+        requestQueue = Volley.newRequestQueue(this);
         String url = getResources().getString(R.string.base_url) + SPOT_PATH;
         Log.d("GET::SPOTS::SERVICE", url);
 
@@ -82,7 +84,7 @@ public class SpotService extends IntentService {
             }
         });
 
-        queue.add(stringRequest);
+        requestQueue.add(stringRequest);
     }
 
     private void publishResults(int result) {

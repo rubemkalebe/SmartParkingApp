@@ -3,12 +3,12 @@ package br.ufrn.imd.smartparkingapp.model;
 import java.io.Serializable;
 
 /**
- * Created by andre on 21/03/2016.
- * Updated by Rubem on 08/18/2016.
+ * @author André, Rubem
+ * @version 18/08/2016
  */
 public class Spot implements Serializable {
 
-    private Integer spotID = null;
+    private Integer id = null;
 
     private Double latitude = null;
 
@@ -16,37 +16,34 @@ public class Spot implements Serializable {
 
     private String ipAddress = null;
 
-    private Boolean isReserved = null;
+    private Boolean reserved = null;
 
     private Boolean busy = null;
 
-    private String UID = null;
-
-    private Boolean _new = null;
+    private String uid = null;
 
 
     public Spot() {
         super();
     }
 
-    public Spot(Integer spotID, Double latitude, Double longitude, String ipAddress,
-                Boolean isReserved, Boolean busy, String UID, Boolean _new) {
-        this.spotID = spotID;
+    public Spot(Integer id, Double latitude, Double longitude, String ipAddress,
+                Boolean reserved, Boolean busy, String uid, Boolean _new) {
+        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.ipAddress = ipAddress;
-        this.isReserved = isReserved;
+        this.reserved = reserved;
         this.busy = busy;
-        this.UID = UID;
-        this._new = _new;
+        this.uid = uid;
     }
 
-    public Integer getSpotID() {
-        return spotID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setSpotID(Integer spotID) {
-        this.spotID = spotID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Double getLatitude() {
@@ -74,11 +71,11 @@ public class Spot implements Serializable {
     }
 
     public Boolean getReserved() {
-        return isReserved;
+        return reserved;
     }
 
     public void setReserved(Boolean reserved) {
-        isReserved = reserved;
+        this.reserved = reserved;
     }
 
     public Boolean getBusy() {
@@ -89,20 +86,36 @@ public class Spot implements Serializable {
         this.busy = busy;
     }
 
-    public String getUID() {
-        return UID;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public Boolean get_new() {
-        return _new;
-    }
-
-    public void set_new(Boolean _new) {
-        this._new = _new;
+    @Override
+    public String toString() {
+        /*return "Spot{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", reserved=" + reserved +
+                ", busy=" + busy +
+                ", uid='" + uid + '\'' +
+                '}';*/
+        String str = "Vaga ";
+        if(reserved && !busy) {
+            str += " Reservada Livre";
+        } else if(reserved && busy) {
+            str += " Reservada Ocupada";
+        } else if(busy) {
+            str += " Ocupada";
+        } else {
+            str += " Livre";
+        }
+        return str;
     }
 
 }
