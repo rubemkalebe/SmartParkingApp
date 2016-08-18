@@ -20,46 +20,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufrn.imd.smartparkingapp.R;
-import br.ufrn.imd.smartparkingapp.model.Sensor;
+import br.ufrn.imd.smartparkingapp.model.Spot;
 import br.ufrn.imd.smartparkingapp.utils.JSONProcessor;
 
 /**
  * Created by andre on 13/04/2016.
+ * Updated by Rubem on 08/18/2016.
  */
-public class SensorService extends IntentService {
+public class SpotService extends IntentService {
 
-    public static final String NOTIFICATION = "br.ufrn.imd.smartparkingapp.service.SensorService";
-    public static final String SENSORES = "sensores";
+    public static final String NOTIFICATION = "br.ufrn.imd.smartparkingapp.service.SpotService";
+    public static final String SPOTS = "spots";
     public static final String RESULT = "result";
 
-    private static final String SENSORES_LIST = "/sensor/list";
+    private static final String SPOT_PATH = "/spot";
     private static final String TAG_APP = "SMARTPARKING";
 
     private int result = Activity.RESULT_CANCELED;
-    private List<Sensor> sensores = null;
+    private List<Spot> spots = null;
 
-    public SensorService() {
+    public SpotService() {
         super(TAG_APP);
-        this.sensores = new ArrayList<Sensor>();
+        this.spots = new ArrayList<Spot>();
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         while (true) {
-            Log.d("SERVICE::", "SENSORSERVICE");
-            requestGetSensores();
+            Log.d("SERVICE::", "SPOTSSERVICE");
+            requestGetSpots();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                Log.d("THREAD::ERROR::SENSORES", e.toString());
+                Log.d("THREAD::ERROR::SPOTS", e.toString());
             }
         }
     }
 
-    private void requestGetSensores() {
+    private void requestGetSpots() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = getResources().getString(R.string.base_url) + SENSORES_LIST;
-        Log.d("GET::SENSORES::SERVICE", url);
+        String url = getResources().getString(R.string.base_url) + SPOT_PATH;
+        Log.d("GET::SPOTS::SERVICE", url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -67,17 +68,17 @@ public class SensorService extends IntentService {
                     public void onResponse(String response) {
                         Log.d("REQUEST::SERVICE", response);
                         try {
-                            sensores = JSONProcessor.toList(response, Sensor.class);
+                            spots = JSONProcessor.toList(response, Spot.class);
                             result = Activity.RESULT_OK;
                             publishResults(result);
                         } catch (JSONException e) {
-                            Log.d("REQ::ERROR::SENSORES", e.toString());
+                            Log.d("REQ::ERROR::SPOTS", e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("REQ::ERROR::SENSORES", error.toString());
+                Log.d("REQ::ERROR::SPOTS", error.toString());
             }
         });
 
@@ -88,7 +89,7 @@ public class SensorService extends IntentService {
         Intent intent = new Intent(NOTIFICATION);
         Bundle b = new Bundle();
 
-        b.putSerializable(SENSORES, (Serializable) this.sensores);
+        b.putSerializable(SPOTS, (Serializable) this.spots);
 
         intent.putExtras(b);
         intent.putExtra(RESULT, result);
