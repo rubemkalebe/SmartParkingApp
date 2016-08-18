@@ -21,20 +21,22 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import br.ufrn.imd.smartparkingapp.model.Sensor;
-import br.ufrn.imd.smartparkingapp.service.SensorService;
+import br.ufrn.imd.smartparkingapp.model.Spot;
+import br.ufrn.imd.smartparkingapp.service.SpotService;
 
 /**
  * Created by andre on 25/03/2016.
+ * Updated by Rubem on 08/18/2016.
  */
 @EActivity(R.layout.main_activity)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private LatLng localizacao = new LatLng(-5.832407, -35.205447);
 
-    private List<Sensor> sensores;
+    private List<Spot> spots;
     private GoogleMap googleMap;
 
     @FragmentById(R.id.map)
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(receiver, new IntentFilter(SensorService.NOTIFICATION));
-        Intent intent = new Intent(this, SensorService.class);
+        registerReceiver(receiver, new IntentFilter(SpotService.NOTIFICATION));
+        Intent intent = new Intent(this, SpotService.class);
         startService(intent);
     }
 
@@ -78,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                sensores = (List<Sensor>) bundle.getSerializable(SensorService.SENSORES);
-                int resultCode = bundle.getInt(SensorService.RESULT);
+                spots = (List<Spot>) bundle.getSerializable(SpotService.SPOTS);
+                int resultCode = bundle.getInt(SpotService.RESULT);
                 if (resultCode == RESULT_OK) {
-                    Log.i("REQ::SENSORES", "SUCESSO");
+                    Log.i("REQ::SPOTS", "SUCESSO");
                     updateMap();
                 }
             }
@@ -90,15 +92,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateMap() {
         if (this.googleMap != null) {
-            for (Sensor sensor : sensores) {
-                BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(sensor.getBusy() ? BitmapDescriptorFactory.HUE_RED : BitmapDescriptorFactory.HUE_AZURE);
-                LatLng vaga = new LatLng(sensor.getLatitude(), sensor.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(vaga).title("VAGA " + sensor.getId()).icon(icon));
+            for (Spot spot: spots) {
+                BitmapDescriptor icon;
+                if(spot.getReserved() && !spot.getBusy()) {
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
+                } else if(spot.getBusy()) {
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                } else {
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+                }
+
+                LatLng vaga = new LatLng(spot.getLatitude(), spot.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(vaga).title("VAGA " + spot.getSpotID()).icon(icon));
             }
         } else {
             Log.i("UPDATE::MAP", "ERRO");
         }
     }
-
 
 }
