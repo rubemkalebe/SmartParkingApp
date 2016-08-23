@@ -105,8 +105,8 @@ public class Spot implements Serializable {
                 ", busy=" + busy +
                 ", uid='" + uid + '\'' +
                 '}';*/
-        String str = "Vaga ";
-        if(reserved && !busy) {
+        String str = "Vaga " + id;
+        /*if(reserved && !busy) {
             str += " Reservada Livre";
         } else if(reserved && busy) {
             str += " Reservada Ocupada";
@@ -114,7 +114,7 @@ public class Spot implements Serializable {
             str += " Ocupada";
         } else {
             str += " Livre";
-        }
+        }*/
         return str;
     }
 

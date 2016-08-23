@@ -7,11 +7,14 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,12 +31,12 @@ import br.ufrn.imd.smartparkingapp.service.SpotService;
 
 /**
  * @author André, Rubem
- * @version 18/08/2016
+ * @version 23/08/2016
  */
 @EActivity(R.layout.main_activity)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private LatLng localizacao = new LatLng(-5.832407, -35.205447);
+    private LatLng localizacao = new LatLng(-5.832458, -35.205562);
 
     private List<Spot> spots;
     private GoogleMap googleMap;
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.traffic_jam_48);
     }
 
     @Override
@@ -52,12 +59,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         registerReceiver(receiver, new IntentFilter(SpotService.NOTIFICATION));
         Intent intent = new Intent(this, SpotService.class);
         startService(intent);
+
+        // Exibe toast introdutorio
+        CharSequence introMsg = getString(R.string.introMsg);
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(getApplicationContext(), introMsg, duration);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+
+        if(receiver != null) {
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
     }
 
     @AfterViews
@@ -70,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(localizacao, 20));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.8f), 2000, null);
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
         this.googleMap = googleMap;
     }
 
