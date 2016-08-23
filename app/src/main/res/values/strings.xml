@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">IMD SmartParking</string>
+    <string name="app_name">Smart Parking</string>
     <string name="base_url">http://10.7.30.219:8380/</string>
+    <string name="introMsg">Clique nos marcadores para mais opções</string>
 </resources>
