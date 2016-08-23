@@ -28,12 +28,12 @@ import br.ufrn.imd.smartparkingapp.service.SpotService;
 
 /**
  * @author André, Rubem
- * @version 18/08/2016
+ * @version 23/08/2016
  */
 @EActivity(R.layout.main_activity)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private LatLng localizacao = new LatLng(-5.832407, -35.205447);
+    private LatLng localizacao = new LatLng(-5.832458, -35.205562);
 
     private List<Spot> spots;
     private GoogleMap googleMap;
@@ -57,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+
+        if(receiver != null) {
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
     }
 
     @AfterViews
