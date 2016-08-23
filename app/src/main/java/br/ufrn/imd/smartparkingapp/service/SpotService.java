@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -25,7 +30,7 @@ import br.ufrn.imd.smartparkingapp.utils.JSONProcessor;
 
 /**
  * @author André, Rubem
- * @version 18/08/2016
+ * @version 23/08/2016
  */
 public class SpotService extends IntentService {
 
@@ -52,15 +57,23 @@ public class SpotService extends IntentService {
             Log.d("SERVICE::", "SPOTSSERVICE");
             requestGetSpots();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Log.d("THREAD::ERROR::SPOTS", e.toString());
             }
         }
     }
 
+    private RequestQueue getRequestQueue() {
+        // lazy initialize the request queue, the queue instance will be
+        // created when it is accessed for the first time
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
+        return requestQueue;
+    }
+
     private void requestGetSpots() {
-        requestQueue = Volley.newRequestQueue(this);
         String url = getResources().getString(R.string.base_url) + SPOT_PATH;
         Log.d("GET::SPOTS::SERVICE", url);
 
@@ -84,7 +97,7 @@ public class SpotService extends IntentService {
             }
         });
 
-        requestQueue.add(stringRequest);
+        getRequestQueue().add(stringRequest);
     }
 
     private void publishResults(int result) {
