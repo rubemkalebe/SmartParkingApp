@@ -99,7 +99,7 @@ public class Spot implements Serializable {
 
     @Override
     public String toString() {
-        String str = "Vaga " + this.identifier;
+        String str = "Spot " + this.identifier;
         return str;
     }
 }
