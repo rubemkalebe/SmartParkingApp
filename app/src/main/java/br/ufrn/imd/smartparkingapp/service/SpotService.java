@@ -6,15 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -53,20 +48,11 @@ public class SpotService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        while (true) {
-            Log.d("SERVICE::", "SPOTSSERVICE");
-            requestGetSpots();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.d("THREAD::ERROR::SPOTS", e.toString());
-            }
-        }
+        Log.d("SERVICE::", "SPOTSSERVICE");
+        requestGetSpots();
     }
 
     private RequestQueue getRequestQueue() {
-        // lazy initialize the request queue, the queue instance will be
-        // created when it is accessed for the first time
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(getApplicationContext());
         }

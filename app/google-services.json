@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "983732310591",
+    "project_id": "smartparking-7e2ab"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983732310591:android:06690defd930f4b6",
+        "android_client_info": {
+          "package_name": "br.ufrn.imd.smartparkingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSXIj34Zy_Ujb1g6bRlOVJPRTZF-_7IVI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

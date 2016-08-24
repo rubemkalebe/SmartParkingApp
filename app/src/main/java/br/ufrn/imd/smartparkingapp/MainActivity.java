@@ -10,11 +10,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,6 +27,7 @@ import org.androidannotations.annotations.FragmentById;
 
 import java.util.List;
 
+import br.ufrn.imd.smartparkingapp.gcm.RegistrationIntentService;
 import br.ufrn.imd.smartparkingapp.model.Spot;
 import br.ufrn.imd.smartparkingapp.service.SpotService;
 
@@ -35,6 +37,8 @@ import br.ufrn.imd.smartparkingapp.service.SpotService;
  */
 @EActivity(R.layout.main_activity)
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private LatLng localizacao = new LatLng(-5.832458, -35.205562);
 
@@ -51,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.traffic_jam_48);
+
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     @Override
@@ -77,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPause() {
         super.onPause();
 
-        if(receiver != null) {
+        if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
         }
@@ -115,11 +124,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateMap() {
         if (this.googleMap != null) {
-            for (Spot spot: spots) {
+            for (Spot spot : spots) {
                 BitmapDescriptor icon;
-                if(spot.getReserved() && !spot.getBusy()) {
+                if (spot.getReserved() && !spot.getBusy()) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
-                } else if(spot.getBusy()) {
+                } else if (spot.getBusy()) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 } else {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
@@ -133,4 +142,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i("CHECK::PLAY::SERVICES", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 }
