@@ -9,27 +9,22 @@ import java.io.Serializable;
 public class Spot implements Serializable {
 
     private Integer id = null;
-
+    private Integer identifier = null;
     private Double latitude = null;
-
     private Double longitude = null;
-
     private String ipAddress = null;
-
     private Boolean reserved = null;
-
     private Boolean busy = null;
-
     private String uid = null;
-
 
     public Spot() {
         super();
     }
 
-    public Spot(Integer id, Double latitude, Double longitude, String ipAddress,
+    public Spot(Integer id, Integer identifier, Double latitude, Double longitude, String ipAddress,
                 Boolean reserved, Boolean busy, String uid, Boolean _new) {
         this.id = id;
+        this.identifier = identifier;
         this.latitude = latitude;
         this.longitude = longitude;
         this.ipAddress = ipAddress;
@@ -44,6 +39,14 @@ public class Spot implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(Integer identifier) {
+        this.identifier = identifier;
     }
 
     public Double getLatitude() {
@@ -96,26 +99,7 @@ public class Spot implements Serializable {
 
     @Override
     public String toString() {
-        /*return "Spot{" +
-                "id=" + id +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", reserved=" + reserved +
-                ", busy=" + busy +
-                ", uid='" + uid + '\'' +
-                '}';*/
-        String str = "Vaga " + id;
-        /*if(reserved && !busy) {
-            str += " Reservada Livre";
-        } else if(reserved && busy) {
-            str += " Reservada Ocupada";
-        } else if(busy) {
-            str += " Ocupada";
-        } else {
-            str += " Livre";
-        }*/
+        String str = "Vaga " + this.identifier;
         return str;
     }
-
 }
