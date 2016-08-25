@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateMap() {
         if (this.googleMap != null) {
+            googleMap.clear();
             for (Spot spot : spots) {
                 BitmapDescriptor icon;
                 if (spot.getReserved() && !spot.getBusy()) {
